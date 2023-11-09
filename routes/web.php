@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\AudioController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AudioController::class, 'index'])
+Route::get('/', [ArticleController::class, 'index'])
     ->name('root');
 
 Route::get('/dashboard', function () {
@@ -33,6 +34,13 @@ Route::resource('audios', AudioController::class)
     ->middleware('auth');
 
 Route::resource('audios', AudioController::class)
+    ->only(['show', 'index']);
+
+Route::resource('articles', ArticleController::class)
+    ->only(['create', 'store', 'edit', 'update', 'destroy'])
+    ->middleware('auth');
+
+Route::resource('articles', ArticleController::class)
     ->only(['show', 'index']);
 
 require __DIR__ . '/auth.php';
