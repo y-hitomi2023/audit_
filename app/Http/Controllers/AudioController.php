@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Audio;
+use Illuminate\Support\Facades\Storage;
 
 class AudioController extends Controller
 {
@@ -27,7 +29,29 @@ class AudioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $audio = new Audio();
+        $audio->status = 0;
+        $audio->file = "test";
+        $audio->article_id = 1;
+        $audio->user_id = 1;
+        $audio->save();
+
+        $audio = new Audio($request->all());
+        // $audio->user_id = $request->user()->id;
+        $audio->user_id = 1;
+        $audio->article_id = 1;
+        $audio->status = 1;
+
+        $file = $request->file('blob');
+        $audio->file = date('YmdHis') . '_' . $file->getClientOriginalName();
+
+        $audio->save();
+
+        // 画像アップロード
+        Storage::putFileAs('images/posts', $file, $audio->file);
+
+        return redirect()
+            ->route('audios.index');
     }
 
     /**

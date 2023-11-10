@@ -45,7 +45,7 @@ class ArticleController extends Controller
         $audio->save();
 
         // 画像アップロード
-        Storage::putFileAs('public/images/posts', $file, $audio->file);
+        Storage::putFileAs('images/posts', $file, $audio->file);
 
         return redirect()
             ->route('articles.index');

@@ -29,12 +29,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('audios', AudioController::class)
-    ->only(['create', 'store', 'edit', 'update', 'destroy'])
-    ->middleware('auth');
+// Route::resource('audios', AudioController::class)
+//     ->only(['create', 'store', 'edit', 'update', 'destroy'])
+//     ->middleware('auth');
 
-Route::resource('audios', AudioController::class)
-    ->only(['show', 'index']);
+// Route::resource('audios', AudioController::class)
+//     ->only(['show', 'index']);
+Route::resource('audios', AudioController::class);
 
 Route::resource('articles', ArticleController::class)
     ->only(['create', 'store', 'edit', 'update', 'destroy'])

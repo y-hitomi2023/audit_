@@ -56,6 +56,24 @@
 
                 <button type="submit">アップロード</button>
             </form>
+            <div id="app">
+                <button class="btn btn-danger" type="button" v-if="status=='ready'"
+                    @click="startRecording">録音を開始する</button>
+                <button class="btn btn-primary" type="button" v-if="status=='recording'"
+                    @click="stopRecording">録音を終了する</button>
+            </div>
+            <img src="{{ Storage::url('images/posts/' . '20231109212458_パソコン部屋（夜・画面のみON）.jpg') }}" alt=""
+                class="circle">
+            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210934_audio (4).mp3') }}"
+                id="voiceContent" alt=""></audio>
+            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210911_1699352908.webm') }}"
+                id="voiceContent" alt=""></audio>
+            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111055145_1699604504.webm') }}"
+                id="voiceContent" alt=""></audio>
+            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111060623_blob') }}"
+                id="voiceContent" alt=""></audio>
+            <button class="btn btn-danger" type="button" v-if="status=='ready'" onclick="postTest()">ファイル送信テスト</button>
+
 </x-app-layout>
 
 <script>
@@ -156,5 +174,181 @@
 <script>
     function buttonTest() {
         alert("test");
+    }
+</script>
+
+{{-- 以下録音部分 --}}
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+
+            // ① 変数を宣言する部分
+            status: 'init', // 状況
+            recorder: null, // 音声にアクセスする "MediaRecorder" のインスタンス
+            audioData: [], // 入力された音声データ
+            audioExtension: '' // 音声ファイルの拡張子
+
+        },
+        methods: {
+
+            // ② 録音を開始／ストップする部分
+            startRecording() {
+
+                this.status = 'recording';
+                this.audioData = [];
+                this.recorder.start();
+
+            },
+            stopRecording() {
+
+                this.recorder.stop();
+                this.status = 'ready';
+
+            },
+
+            // ④ 音声ファイルの拡張子を取得する部分
+            getExtension(audioType) {
+
+                let extension = 'wav';
+                const matches = audioType.match(/audio\/([^;]+)/);
+
+                if (matches) {
+
+                    extension = matches[1];
+
+                }
+
+                return '.' + extension;
+
+            }
+
+        },
+        mounted() {
+
+            // ⑤ マイクにアクセス
+            navigator.mediaDevices.getUserMedia({
+                    audio: true
+                })
+                .then(stream => {
+
+                    this.recorder = new MediaRecorder(stream);
+                    this.recorder.addEventListener('dataavailable', e => {
+
+                        this.audioData.push(e.data);
+                        this.audioExtension = this.getExtension(e.data.type);
+
+                    });
+                    this.recorder.addEventListener('stop', () => {
+
+                        const audioBlob = new Blob(this.audioData);
+                        const url = URL.createObjectURL(audioBlob);
+                        let a = document.createElement('a');
+                        a.href = url;
+                        a.download = Math.floor(Date.now() / 1000) + this.audioExtension;
+                        document.body.appendChild(a);
+                        a.click();
+
+                        const formData = new FormData();
+
+                        // formData.append("username", "Groucho");
+                        // formData.append("accountnum", 123456); // 数値 123456 は直ちに文字列 "123456" へ変換されます
+
+                        // // HTML の file input でユーザーが選択したファイル
+                        // formData.append("userfile", fileInputElement.files[0]);
+
+                        // // ファイルのような JavaScript オブジェクト
+                        // const content = '<q id="a"><span id="b">hey!</span></q>'; // 新しいファイルの本体…
+                        // const blob = new Blob([content], {
+                        //     type: "text/xml"
+                        // });
+
+                        // formData.append("webmasterfile", audioBlob);
+                        formData.append("blob", audioBlob);
+
+                        const request = new XMLHttpRequest();
+                        // request.open("POST", "http://foo.com/submitform.php");
+                        request.open("POST", "http://localhost/audios");
+                        request.send(formData);
+
+                        // axios.post('/articles', audioBlob).then((response) => {
+                        //     user.value = response.data;
+                        //     if (response.data.file_path) showUserImage.value = true;
+                        // });
+
+                        // //アップロードするファイルのデータ取得
+                        // // var fileData = document.getElementById("upload_file").files[0];
+                        // //フォームデータを作成する
+                        // var form = new FormData();
+                        // //フォームデータにアップロードファイルの情報追加
+                        // form.append("file", audioBlob);
+
+                        // $.ajax({
+                        //     type: "POST",
+                        //     url: "{{ route('articles.store') }}",
+                        //     data: form,
+                        //     processData: false,
+                        //     contentType: false,
+                        //     success: function(response) {
+                        //         if (response.is_success) {
+                        //             buttonTest();
+                        //             //モーダルの処理
+                        //             //エラーメッセージ非表示
+                        //             $('#searchErrorMessage').html('');
+                        //             $('#searchErrorMessage').hide();
+                        //             //モーダルを閉じる
+                        //             $('#file_upload_modal').modal('toggle');
+                        //         } else {
+                        //             buttonTest();
+                        //             //モーダルでのエラーメッセージ表示処理
+                        //             var msg = "";
+                        //             $.each(response.errors_message, function(i, v) {
+                        //                 msg += v + "<br>";
+                        //             });
+                        //             $('#searchErrorMessage').html(msg);
+                        //             $('#searchErrorMessage').show();
+                        //         }
+                        //     },
+                        //     error: function(response) {
+                        //         //エラー時の処理
+                        //         buttonTest();
+                        //     }
+                        // });
+
+
+                    });
+                    this.status = 'ready';
+
+
+                });
+
+        }
+    });
+
+    function postTest() {
+
+        alert("test");
+        const formData = new FormData();
+
+        formData.append("username", "Groucho");
+        formData.append("accountnum", 123456); // 数値 123456 は直ちに文字列 "123456" へ変換されます
+
+        // HTML の file input でユーザーが選択したファイル
+        formData.append("userfile", fileInputElement.files[0]);
+
+        // ファイルのような JavaScript オブジェクト
+        const content = '<q id="a"><span id="b">hey!</span></q>'; // 新しいファイルの本体…
+        const blob = new Blob([content], {
+            type: "text/xml"
+        });
+
+        formData.append("webmasterfile", blob);
+
+        const request = new XMLHttpRequest();
+        // request.open("POST", "http://foo.com/submitform.php");
+        request.open("POST", "http://localhost/audios");
+        request.send(formData);
+
     }
 </script>
