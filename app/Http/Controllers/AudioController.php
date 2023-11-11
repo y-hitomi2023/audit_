@@ -48,7 +48,7 @@ class AudioController extends Controller
         $audio->save();
 
         // 画像アップロード
-        Storage::putFileAs('images/posts', $file, $audio->file);
+        Storage::putFileAs('audios', $file, $audio->file);
 
         return redirect()
             ->route('audios.index');

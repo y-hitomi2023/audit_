@@ -70,7 +70,7 @@
                 id="voiceContent" alt=""></audio>
             <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111055145_1699604504.webm') }}"
                 id="voiceContent" alt=""></audio>
-            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111060623_blob') }}"
+            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111061245_blob') }}"
                 id="voiceContent" alt=""></audio>
             <button class="btn btn-danger" type="button" v-if="status=='ready'" onclick="postTest()">ファイル送信テスト</button>
 

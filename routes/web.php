@@ -37,11 +37,12 @@ Route::middleware('auth')->group(function () {
 //     ->only(['show', 'index']);
 Route::resource('audios', AudioController::class);
 
-Route::resource('articles', ArticleController::class)
-    ->only(['create', 'store', 'edit', 'update', 'destroy'])
-    ->middleware('auth');
+// Route::resource('articles', ArticleController::class)
+//     ->only(['create', 'store', 'edit', 'update', 'destroy'])
+//     ->middleware('auth');
 
-Route::resource('articles', ArticleController::class)
-    ->only(['show', 'index']);
+// Route::resource('articles', ArticleController::class)
+//     ->only(['show', 'index']);
+Route::resource('articles', ArticleController::class);
 
 require __DIR__ . '/auth.php';

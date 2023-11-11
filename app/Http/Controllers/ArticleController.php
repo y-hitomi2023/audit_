@@ -35,7 +35,8 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $audio = new Audio($request->all());
-        $audio->user_id = $request->user()->id;
+        // $audio->user_id = $request->user()->id;
+        $audio->user_id = 1;
         $audio->article_id = 1;
         $audio->status = 1;
 
@@ -45,7 +46,7 @@ class ArticleController extends Controller
         $audio->save();
 
         // 画像アップロード
-        Storage::putFileAs('images/posts', $file, $audio->file);
+        Storage::putFileAs('audios', $file, $audio->file);
 
         return redirect()
             ->route('articles.index');
@@ -56,7 +57,11 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        return view('articles.index');
+        // $article = Article::with(['user'])->find($id);
+        // $comments = $article->comments()->latest()->get()->load(['user']);
+        $article = Article::find($id);
+
+        return view('articles.show', compact('article'));
     }
 
     /**
