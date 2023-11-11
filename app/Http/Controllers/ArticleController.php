@@ -18,11 +18,23 @@ class ArticleController extends Controller
     {
         // return view('articles.index');
         $articles = Article::all();
-        $book = Book::find($articles[1]->book_id);
+        // $book = Book::find($articles[1]->book_id);
         // echo $articles[1]->title;
         // dd($book);
 
-        return view('articles.index', compact('articles','book'));
+        // $articles = DB::table('articles')
+        //     ->leftJoin('audio', 'articles.id', '=', 'audio.article_id')
+        //     ->leftJoin('books', 'articles.book_id', '=', 'books.id')
+        //     // ->where('audio.book_id', $book->id)
+        //     // ->groupBy('audio.article_id')
+        //     ->orderBy('articles.id', 'asc')
+        //     ->get();
+
+        $book = Book::find($articles[1]->book_id);
+
+        // dd($articles[1]->writer_id);
+
+        return view('articles.index', compact('articles', 'book'));
     }
 
     /**
