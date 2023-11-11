@@ -9,11 +9,11 @@
             <h2 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-1 text-3xl md:text-4xl break-words">
                 {{ $article->body }}</h2>
             <h3>{{ $article->script }}</h3>
-            <p class="text-sm mb-2 md:text-base font-normal text-gray-600">
+            {{-- <p class="text-sm mb-2 md:text-base font-normal text-gray-600">
                 <span
                     class="text-red-400 font-bold">{{ date('Y-m-d H:i:s', strtotime('-1 day')) < $article->created_at ? 'NEW' : '' }}</span>
                 {{ $article->created_at }}
-            </p>
+            </p> --}}
 
             <div id="open">
                 {{-- <img src="{{ $article->image_url }}" alt="" class="mb-4"> --}}
@@ -23,9 +23,16 @@
                 <!-- モーダルウィンドウ内を開くボタンの指定 -->
                 <button>録音</button>
 
-                <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210934_audio (4).mp3') }}"
-                    id="voiceContent" alt=""></audio>
             </div>
+
+            <button onclick="postAudio()">test</button>
+            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210934_audio (4).mp3') }}"
+                id="voiceContent" alt=""></audio>
+            <audio controls autoplay src="{{ Storage::url('audios/' . '20231111120530_blob') }}"
+                id="voiceContent" alt=""></audio>
+            <audio controls autoplay src="" id="yourVoiceContent" alt=""></audio>
+            <button id="upload_button" onclick="postAudio()">アップロード</button>
+
 
             <dialog class="dialog">
                 <!-- モーダルウィンドウ内のテキストの指定 -->
@@ -120,6 +127,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
 <script>
+var audioBlob ="";//グローバル変数
+
     new Vue({
         el: '#app',
         data: {
@@ -182,7 +191,8 @@
                     });
                     this.recorder.addEventListener('stop', () => {
 
-                        const audioBlob = new Blob(this.audioData);
+                        // const audioBlob = new Blob(this.audioData);
+                        audioBlob = new Blob(this.audioData);
                         const url = URL.createObjectURL(audioBlob);
                         let a = document.createElement('a');
                         a.href = url;
@@ -214,50 +224,14 @@
 
                         dialog.close();
 
-                        // axios.post('/articles', audioBlob).then((response) => {
-                        //     user.value = response.data;
-                        //     if (response.data.file_path) showUserImage.value = true;
-                        // });
+                        let audio_yours = document.getElementById('yourVoiceContent');
+                        let upload_button = document.getElementById('upload_button');
 
-                        // //アップロードするファイルのデータ取得
-                        // // var fileData = document.getElementById("upload_file").files[0];
-                        // //フォームデータを作成する
-                        // var form = new FormData();
-                        // //フォームデータにアップロードファイルの情報追加
-                        // form.append("file", audioBlob);
+                        audio_yours.style.display = "block";
+                        upload_button.style.display = "block";
 
-                        // $.ajax({
-                        //     type: "POST",
-                        //     url: "{{ route('articles.store') }}",
-                        //     data: form,
-                        //     processData: false,
-                        //     contentType: false,
-                        //     success: function(response) {
-                        //         if (response.is_success) {
-                        //             buttonTest();
-                        //             //モーダルの処理
-                        //             //エラーメッセージ非表示
-                        //             $('#searchErrorMessage').html('');
-                        //             $('#searchErrorMessage').hide();
-                        //             //モーダルを閉じる
-                        //             $('#file_upload_modal').modal('toggle');
-                        //         } else {
-                        //             buttonTest();
-                        //             //モーダルでのエラーメッセージ表示処理
-                        //             var msg = "";
-                        //             $.each(response.errors_message, function(i, v) {
-                        //                 msg += v + "<br>";
-                        //             });
-                        //             $('#searchErrorMessage').html(msg);
-                        //             $('#searchErrorMessage').show();
-                        //         }
-                        //     },
-                        //     error: function(response) {
-                        //         //エラー時の処理
-                        //         buttonTest();
-                        //     }
-                        // });
-
+                        // audio_yours.setAttribute('src', data.mp3StreamingUrl);
+                        audio_yours.setAttribute('src', url);
 
                     });
                     this.status = 'ready';
@@ -267,4 +241,34 @@
 
         }
     });
+
+    function postAudio() {
+
+        alert("test");
+
+        const formData = new FormData();
+
+        formData.append("blob", audioBlob);
+
+        const request = new XMLHttpRequest();
+        // request.open("POST", "http://foo.com/submitform.php");
+        request.open("POST", "http://localhost/audios");
+        request.send(formData);
+
+        dialog.close();
+
+        let audio_yours = document.getElementById('yourVoiceContent');
+        let upload_button = document.getElementById('upload_button');
+
+        // audio_yours.style.display = "block";
+        upload_button.style.display = "none";
+
+        // audio_yours.setAttribute('src', data.mp3StreamingUrl);
+        // audio_yours.setAttribute('src', url);
+
+        // audio_yours.getUserMedia('src', url);
+
+        alert("end");
+
+    }
 </script>

@@ -47,6 +47,38 @@
                 </div>
             </div>
 
+            {{-- テーブル --}}
+            <table border="1">
+                <tr>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                </tr>
+                @foreach ($articles as $article)
+                    @if ($loop->iteration % 4 == 0)
+                        <td><a href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
+                        </td>
+                        </tr>
+                    @elseif ($loop->iteration % 4 == 1)
+                        <tr>
+
+                            <td><a
+                                    href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
+                            </td>
+
+                            {{-- <img src="{{ Storage::url('images/posts/' . '20231109212458_パソコン部屋（夜・画面のみON）.jpg') }}"
+                                    alt="" class="circle">
+                            </td> --}}
+                        @else
+                            <td><a
+                                    href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
+                            </td>
+                    @endif
+                @endforeach
+            </table>
+
+
             <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
                 class="rounded pt-3 pb-8 mb-4">
                 @csrf
@@ -241,7 +273,7 @@
 
                     });
                     this.recorder.addEventListener('stop', () => {
-
+                    
                         const audioBlob = new Blob(this.audioData);
                         const url = URL.createObjectURL(audioBlob);
                         let a = document.createElement('a');

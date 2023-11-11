@@ -9,11 +9,11 @@
     object-fit: cover;
 }
 
-#mic {
+/* #mic {
     div {
         text-align: center;
     }
-}
+} */
 
 dialog {
     padding: 96px;
@@ -25,4 +25,25 @@ dialog {
 dialog::backdrop {
     /* 背景を半透明のブラックにする */
     background-color: rgba(0, 0, 0, 0.4);
+}
+
+th,
+td {
+    border: solid 1px;
+    /* 枠線指定 */
+    padding: 10px;
+    /* 余白指定 */
+}
+
+table {
+    border-collapse: collapse;
+    /* セルの線を重ねる */
+}
+
+#yourVoiceContent {
+    display: none;
+}
+
+#upload_button {
+    display: none;
 }
