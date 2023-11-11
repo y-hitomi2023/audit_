@@ -62,6 +62,8 @@
                 <img src="{{ Storage::url('images/materials/' . '20231111135455_iconmonstr-video-15-240.png') }}"
                     alt="" class="circle" id="playButton" onclick="buttonTest()">
             </div>
+            <audio controls="" src="{{ Storage::url('audios/' . '20231111160015_blob') }}" id="voiceContent" alt=""></audio>
+
 </x-app-layout>
 
 <script>

@@ -31,15 +31,16 @@ class AudioController extends Controller
      */
     public function store(Request $request)
     {
-        $audio = new Audio();
-        $audio->status = 0;
-        $audio->file = "test";
-        $audio->article_id = 1;
-        $audio->user_id = 1;
-        $audio->save();
+        // $audio = new Audio();
+        // $audio->status = 0;
+        // $audio->file = "test";
+        // $audio->article_id = 1;
+        // $audio->user_id = 1;
+        // $audio->save();
 
         $audio = new Audio($request->all());
         // $audio->user_id = $request->user()->id;
+        $audio->book_id = 1;
         $audio->user_id = 1;
         $audio->article_id = 1;
         $audio->status = 1;
@@ -64,9 +65,10 @@ class AudioController extends Controller
         // $article = Article::with(['user'])->find($id);
         // $comments = $article->comments()->latest()->get()->load(['user']);
         $article = Article::find($id);
-        $audios = DB::table('audios')->where('book_id', $article->book_id)->get();
-        dd($audios);
-        return view('articles.show', compact('article'));
+        $audios = DB::table('audio')->where('book_id', $article->book_id)->get();
+        // dd($audios);
+
+        return view('audios.show', compact('audios'));
     }
 
     /**

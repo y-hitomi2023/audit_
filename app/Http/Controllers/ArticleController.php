@@ -40,6 +40,7 @@ class ArticleController extends Controller
     {
         $audio = new Audio($request->all());
         // $audio->user_id = $request->user()->id;
+        $audio->book_id = 1;
         $audio->user_id = 1;
         $audio->article_id = 1;
         $audio->status = 1;

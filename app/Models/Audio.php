@@ -12,8 +12,9 @@ class Audio extends Model
     protected $fillable = [
         'status',
         'file',
+        'book_id',
         'article_id',
-        // 'user_id',
+        'user_id',
     ];
 
     public function user()

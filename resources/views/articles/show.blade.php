@@ -28,9 +28,8 @@
 
             </div>
 
-            <button onclick="postAudio()">test</button>
             {{-- <audio controls autoplay src="" id="voiceContent" alt=""></audio> --}}
-            <audio onload="playSample()" controls autoplay src="" id="yourVoiceContent" alt=""></audio>
+            <audio controls="" src="" id="yourVoiceContent" alt=""></audio>
             <button id="upload_button" onclick="postAudio()">アップロード</button>
 
 
@@ -46,8 +45,6 @@
                 <!-- モーダルウィンドウ内を閉じるボタンの指定 -->
                 <button id="close">キャンセル</button>
             </dialog>
-
-            <button id="sample_button" onclick="playSample()">sample</button>
 
 
             {{-- <p class="text-gray-700 text-base break-words">{!! nl2br(e($article->body)) !!}</p> --}}
@@ -66,16 +63,17 @@
                 </form>
             @endcan
         </div>
+
+
+        {{-- コメント部分なので削除
         @auth
             <hr class="my-4">
             <div class="flex justify-end">
                 <a href="{{ route('articles.comments.create', $article) }}"
                     class="bg-indigo-400 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline block">コメント登録</a>
             </div>
-        @endauth
+        @endauth --}}
 
-
-        {{-- コメント部分なので削除 --}}
         {{-- <section class="font-sans break-normal text-gray-900 ">
             @foreach ($comments as $comment)
                 <div class="my-2">
@@ -246,7 +244,7 @@
 
     function postAudio() {
 
-        alert("test");
+        // alert("test");
 
         const formData = new FormData();
 
@@ -280,65 +278,51 @@
         var voiceScript = document.getElementById('voice_script');
         var voiceContent = document.getElementById("yourVoiceContent");
         var text = voiceScript.textContent;
-        alert(text);
 
-        var speaker = Math.random() * 61;
-        var uri = "https://api.tts.quest/v3/voicevox/synthesis?text=" + text + "&speaker=" + speaker;
-        // var uri = "https://api.tts.quest/v3/voicevox/synthesis?text=" + text + "&speaker=60";
-        var res1 = encodeURI(uri);
+        if (text == null) {
+            alert("null");
+        } else {
 
-        const xhr = new XMLHttpRequest();
-        // xhr.open("GET",
-        //     "https://api.tts.quest/v3/voicevox/synthesis?text=%E7%A2%BA%E8%AA%8D%E3%83%86%E3%82%B9%E3%83%88&speaker=3"
-        //     );
-        xhr.open("GET",
-            res1
-        );
-        xhr.send();
-        xhr.responseType = "json";
-        xhr.onload = () => {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                const data = xhr.response;
-                console.log(data);
-                // alert(data.mp3DownloadUrl);
-                // voiceContent.setAttribute('src', data.mp3DownloadUrl);
-                voiceContent.setAttribute('src', data.mp3StreamingUrl);
-            } else {
-                console.log(`Error: ${xhr.status}`);
-            }
-        };
+            var speaker = Math.random() * 61;
+            var uri = "https://api.tts.quest/v3/voicevox/synthesis?text=" + text + "&speaker=" + speaker;
+            // var uri = "https://api.tts.quest/v3/voicevox/synthesis?text=" + text + "&speaker=60";
+            var res1 = encodeURI(uri);
 
-        // alert(tableContent.textContent);
-        popupContent.textContent = text;
+            const xhr = new XMLHttpRequest();
+            // xhr.open("GET",
+            //     "https://api.tts.quest/v3/voicevox/synthesis?text=%E7%A2%BA%E8%AA%8D%E3%83%86%E3%82%B9%E3%83%88&speaker=3"
+            //     );
+            xhr.open("GET",
+                res1
+            );
+            xhr.send();
+            xhr.responseType = "json";
+            xhr.onload = () => {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    const data = xhr.response;
+                    console.log(data);
+                    // alert(data.mp3DownloadUrl);
+                    // voiceContent.setAttribute('src', data.mp3DownloadUrl);
+                    voiceContent.setAttribute('src', data.mp3StreamingUrl);
+                } else {
+                    console.log(`Error: ${xhr.status}`);
+                }
 
-        popupWrapper.style.display = "block";
+                audioBlob = this.data.Blob;
+            };
 
-        popupWrapper.addEventListener('click', e => {
-            if (e.target.id === popupWrapper.id || e.target.id === close.id) {
-                popupWrapper.style.display = 'none';
-            }
+        }
+        var yes = document.getElementById('yes');
+        var no = document.getElementById('no');
+
+        //「はい」がクリックされたら
+        yes.addEventListener('click', function() {
+            console.log('yes')
         });
-        // alert('Click');
 
-        // let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-        //     width=0,height=0,left=-1000,top=-1000`;
-        // open('https://www.sejuku.net/blog/', null, params);
-
-        // let newWin = window.open("about:blank", "hello", "width=200,height=200");
-
-        // newWin.document.write("Hello, world!");
-
+        //「いいえ」がクリックされたら
+        no.addEventListener('click', function() {
+            console.log('no')
+        });
     }
-    var yes = document.getElementById('yes');
-    var no = document.getElementById('no');
-
-    //「はい」がクリックされたら
-    yes.addEventListener('click', function() {
-        console.log('yes')
-    });
-
-    //「いいえ」がクリックされたら
-    no.addEventListener('click', function() {
-        console.log('no')
-    });
 </script>

@@ -5,6 +5,8 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     記事の一覧画面です！
+                    <audio controls="" src="{{ Storage::url('images/posts/' . '20231111055145_1699604504.webm') }}"
+                        id="voiceContent" alt=""></audio>
                 </div>
             </div>
         </div>
