@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->tinyInteger('status');
             $table->string('file');
+            $table->foreignId('book_id');
             $table->foreignId('article_id')
                 ->constrained()
                 ->cascadeOnUpdate()

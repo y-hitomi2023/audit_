@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use App\Models\Audio;
+use App\Models\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,8 +18,11 @@ class ArticleController extends Controller
     {
         // return view('articles.index');
         $articles = Article::all();
+        $book = Book::find($articles[1]->book_id);
+        // echo $articles[1]->title;
+        // dd($book);
 
-        return view('articles.index', compact('articles'));
+        return view('articles.index', compact('articles','book'));
     }
 
     /**

@@ -8,7 +8,10 @@
         <article class="mb-2">
             <h2 class="font-bold font-sans break-normal text-gray-900 pt-6 pb-1 text-3xl md:text-4xl break-words">
                 {{ $article->body }}</h2>
-            <h3>{{ $article->script }}</h3>
+            {{-- <h3>{{ $article->script }}</h3> --}}
+            <p class="text-sm mb-2 md:text-base font-normal text-gray-600" id="voice_script">
+                {{ $article->script }}
+            </p>
             {{-- <p class="text-sm mb-2 md:text-base font-normal text-gray-600">
                 <span
                     class="text-red-400 font-bold">{{ date('Y-m-d H:i:s', strtotime('-1 day')) < $article->created_at ? 'NEW' : '' }}</span>
@@ -26,11 +29,8 @@
             </div>
 
             <button onclick="postAudio()">test</button>
-            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210934_audio (4).mp3') }}"
-                id="voiceContent" alt=""></audio>
-            <audio controls autoplay src="{{ Storage::url('audios/' . '20231111120530_blob') }}"
-                id="voiceContent" alt=""></audio>
-            <audio controls autoplay src="" id="yourVoiceContent" alt=""></audio>
+            {{-- <audio controls autoplay src="" id="voiceContent" alt=""></audio> --}}
+            <audio onload="playSample()" controls autoplay src="" id="yourVoiceContent" alt=""></audio>
             <button id="upload_button" onclick="postAudio()">アップロード</button>
 
 
@@ -46,6 +46,8 @@
                 <!-- モーダルウィンドウ内を閉じるボタンの指定 -->
                 <button id="close">キャンセル</button>
             </dialog>
+
+            <button id="sample_button" onclick="playSample()">sample</button>
 
 
             {{-- <p class="text-gray-700 text-base break-words">{!! nl2br(e($article->body)) !!}</p> --}}
@@ -127,7 +129,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
 <script>
-var audioBlob ="";//グローバル変数
+    var audioBlob = ""; //グローバル変数
 
     new Vue({
         el: '#app',
@@ -271,4 +273,72 @@ var audioBlob ="";//グローバル変数
         alert("end");
 
     }
+
+    //以下AIサンプルを再生
+    function playSample(element) {
+
+        var voiceScript = document.getElementById('voice_script');
+        var voiceContent = document.getElementById("yourVoiceContent");
+        var text = voiceScript.textContent;
+        alert(text);
+
+        var speaker = Math.random() * 61;
+        var uri = "https://api.tts.quest/v3/voicevox/synthesis?text=" + text + "&speaker=" + speaker;
+        // var uri = "https://api.tts.quest/v3/voicevox/synthesis?text=" + text + "&speaker=60";
+        var res1 = encodeURI(uri);
+
+        const xhr = new XMLHttpRequest();
+        // xhr.open("GET",
+        //     "https://api.tts.quest/v3/voicevox/synthesis?text=%E7%A2%BA%E8%AA%8D%E3%83%86%E3%82%B9%E3%83%88&speaker=3"
+        //     );
+        xhr.open("GET",
+            res1
+        );
+        xhr.send();
+        xhr.responseType = "json";
+        xhr.onload = () => {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                const data = xhr.response;
+                console.log(data);
+                // alert(data.mp3DownloadUrl);
+                // voiceContent.setAttribute('src', data.mp3DownloadUrl);
+                voiceContent.setAttribute('src', data.mp3StreamingUrl);
+            } else {
+                console.log(`Error: ${xhr.status}`);
+            }
+        };
+
+        // alert(tableContent.textContent);
+        popupContent.textContent = text;
+
+        popupWrapper.style.display = "block";
+
+        popupWrapper.addEventListener('click', e => {
+            if (e.target.id === popupWrapper.id || e.target.id === close.id) {
+                popupWrapper.style.display = 'none';
+            }
+        });
+        // alert('Click');
+
+        // let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+        //     width=0,height=0,left=-1000,top=-1000`;
+        // open('https://www.sejuku.net/blog/', null, params);
+
+        // let newWin = window.open("about:blank", "hello", "width=200,height=200");
+
+        // newWin.document.write("Hello, world!");
+
+    }
+    var yes = document.getElementById('yes');
+    var no = document.getElementById('no');
+
+    //「はい」がクリックされたら
+    yes.addEventListener('click', function() {
+        console.log('yes')
+    });
+
+    //「いいえ」がクリックされたら
+    no.addEventListener('click', function() {
+        console.log('no')
+    });
 </script>

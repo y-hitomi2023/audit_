@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Audio;
+use App\Models\Article;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class AudioController extends Controller
 {
@@ -59,7 +61,12 @@ class AudioController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // $article = Article::with(['user'])->find($id);
+        // $comments = $article->comments()->latest()->get()->load(['user']);
+        $article = Article::find($id);
+        $audios = DB::table('audios')->where('book_id', $article->book_id)->get();
+        dd($audios);
+        return view('articles.show', compact('article'));
     }
 
     /**

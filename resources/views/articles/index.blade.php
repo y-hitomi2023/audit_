@@ -6,77 +6,46 @@
                 <div class="p-6 text-gray-900">
                     {{-- タイトル --}}
                     {{-- {{ $articles[1]->body }}; --}}
-                    <button id="test" onclick="buttonTest()">test</button>
-                </div>
-            </div>
-            <div id="popup-wrapper">
-                <div id="popup-inside">
-                    <div id="close">x</div>
-                    <div id="message">
-                        {{-- <h2>あの人気のマンガが...</h2> --}}
-                        <p id="popupContent"></p>
-                        <a href="#">録音</a>
-                        {{-- <audio controls
-                    src="https://audio1.tts.quest//v1//data//2729b8e7308dd4453bfb9493686997626f3635051b9083103245c8127d3b460b//audio.mp3"></audio>
-                     --}}
-                        <audio controls autoplay src="" id="voiceContent" alt=""></audio>
-
-                    </div>
+                    <button id="book_title">{{ $book->title }}</button>
                 </div>
             </div>
             <div class="container max-w-7xl mx-auto px-4 md:px-12 pb-3 mt-3">
                 <div class="flex flex-wrap -mx-1 lg:-mx-4 mb-4">
-                    @foreach ($articles as $article)
-                        <article class="w-full px-4 md:w-1/2 text-xl text-gray-800 leading-normal">
-                            {{-- <a href="{{ route('articles.show', $article) }}"> --}}
-                            {{-- <h2
-                                    class="font-bold font-sans break-normal text-gray-900 pt-6 pb-1 text-3xl md:text-4xl break-words">
-                                    {{ $article->title }}</h2>
-                                <h3>{{ $article->user->name }}</h3> --}}
-                            <p class="text-sm mb-2 md:text-base font-normal text-gray-600">
-                                <span
-                                    class="text-red-400 font-bold">{{ date('Y-m-d H:i:s', strtotime('-1 day')) < $article->created_at ? 'NEW' : '' }}</span>
-                                {{ $article->created_at }}
-                            </p>
-                            {{-- <img class="w-full mb-2" src="{{ $article->image_url }}" alt=""> --}}
-                            <p class="text-gray-700 text-base" id ="tableContent" onclick="buttonClick(this)">
-                                {{ Str::limit($article->body, 50) }}</p>
-                            {{-- </a> --}}
-                        </article>
-                    @endforeach
-                </div>
-            </div>
 
-            {{-- テーブル --}}
-            <table border="1">
-                <tr>
-                    <th>1</th>
-                    <th>2</th>
-                    <th>3</th>
-                    <th>4</th>
-                </tr>
-                @foreach ($articles as $article)
-                    @if ($loop->iteration % 4 == 0)
-                        <td><a href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
-                        </td>
-                        </tr>
-                    @elseif ($loop->iteration % 4 == 1)
+                    {{-- テーブル --}}
+                    <table border="1">
                         <tr>
+                            <th>1</th>
+                            <th>2</th>
+                            <th>3</th>
+                            <th>4</th>
+                        </tr>
+                        @foreach ($articles as $article)
+                            @if ($loop->iteration % 4 == 0)
+                                <td><a
+                                        href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
+                                </td>
+                                </tr>
+                            @elseif ($loop->iteration % 4 == 1)
+                                <tr>
 
-                            <td><a
-                                    href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
-                            </td>
+                                    <td><a
+                                            href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
+                                    </td>
 
-                            {{-- <img src="{{ Storage::url('images/posts/' . '20231109212458_パソコン部屋（夜・画面のみON）.jpg') }}"
+                                    {{-- <img src="{{ Storage::url('images/posts/' . '20231109212458_パソコン部屋（夜・画面のみON）.jpg') }}"
                                     alt="" class="circle">
                             </td> --}}
-                        @else
-                            <td><a
-                                    href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
-                            </td>
-                    @endif
-                @endforeach
-            </table>
+                                @else
+                                    <td><a
+                                            href="{{ route('articles.show', $article) }}">{{ Str::limit($article->body, 50) }}</a>
+                                    </td>
+                            @endif
+                        @endforeach
+                    </table>
+
+                </div>
+            </div>
 
 
             <form action="{{ route('articles.store') }}" method="POST" enctype="multipart/form-data"
@@ -88,24 +57,11 @@
 
                 <button type="submit">アップロード</button>
             </form>
-            <div id="app">
-                <button class="btn btn-danger" type="button" v-if="status=='ready'"
-                    @click="startRecording">録音を開始する</button>
-                <button class="btn btn-primary" type="button" v-if="status=='recording'"
-                    @click="stopRecording">録音を終了する</button>
-            </div>
-            <img src="{{ Storage::url('images/posts/' . '20231109212458_パソコン部屋（夜・画面のみON）.jpg') }}" alt=""
-                class="circle">
-            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210934_audio (4).mp3') }}"
-                id="voiceContent" alt=""></audio>
-            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231109210911_1699352908.webm') }}"
-                id="voiceContent" alt=""></audio>
-            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111055145_1699604504.webm') }}"
-                id="voiceContent" alt=""></audio>
-            <audio controls autoplay src="{{ Storage::url('images/posts/' . '20231111061245_blob') }}"
-                id="voiceContent" alt=""></audio>
-            <button class="btn btn-danger" type="button" v-if="status=='ready'" onclick="postTest()">ファイル送信テスト</button>
 
+            <div class="class1">
+                <img src="{{ Storage::url('images/materials/' . '20231111135455_iconmonstr-video-15-240.png') }}"
+                    alt="" class="circle" id="playButton" onclick="buttonTest()">
+            </div>
 </x-app-layout>
 
 <script>
@@ -273,7 +229,7 @@
 
                     });
                     this.recorder.addEventListener('stop', () => {
-                    
+
                         const audioBlob = new Blob(this.audioData);
                         const url = URL.createObjectURL(audioBlob);
                         let a = document.createElement('a');
